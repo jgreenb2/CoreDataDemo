@@ -13,6 +13,8 @@
 		75E5763F1B7A8B9E00C58009 /* CoreDataDemo.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 75E5763D1B7A8B9E00C58009 /* CoreDataDemo.xcdatamodeld */; };
 		75E576411B7A8B9E00C58009 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 75E576401B7A8B9E00C58009 /* Assets.xcassets */; };
 		75E576441B7A8B9E00C58009 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 75E576421B7A8B9E00C58009 /* LaunchScreen.storyboard */; };
+		75E5764D1B7A8C4500C58009 /* Contacts+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75E5764B1B7A8C4500C58009 /* Contacts+CoreDataProperties.swift */; };
+		75E5764E1B7A8C4500C58009 /* Contacts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75E5764C1B7A8C4500C58009 /* Contacts.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +26,8 @@
 		75E576401B7A8B9E00C58009 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		75E576431B7A8B9E00C58009 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		75E576451B7A8B9E00C58009 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		75E5764B1B7A8C4500C58009 /* Contacts+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Contacts+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		75E5764C1B7A8C4500C58009 /* Contacts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Contacts.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,6 +44,8 @@
 		75E5762A1B7A8B9C00C58009 = {
 			isa = PBXGroup;
 			children = (
+				75E5764B1B7A8C4500C58009 /* Contacts+CoreDataProperties.swift */,
+				75E5764C1B7A8C4500C58009 /* Contacts.swift */,
 				75E576351B7A8B9D00C58009 /* CoreDataDemo */,
 				75E576341B7A8B9D00C58009 /* Products */,
 			);
@@ -139,7 +145,9 @@
 			files = (
 				75E576391B7A8B9D00C58009 /* ViewController.swift in Sources */,
 				75E5763F1B7A8B9E00C58009 /* CoreDataDemo.xcdatamodeld in Sources */,
+				75E5764D1B7A8C4500C58009 /* Contacts+CoreDataProperties.swift in Sources */,
 				75E576371B7A8B9D00C58009 /* AppDelegate.swift in Sources */,
+				75E5764E1B7A8C4500C58009 /* Contacts.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
