@@ -12,7 +12,8 @@ import CoreData
 class ViewController: UIViewController {
     
     let managedObjectContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
-
+    lazy var contactEntity:NSEntityDescription! = NSEntityDescription.entityForName("Contacts", inManagedObjectContext: self.managedObjectContext)
+    
     @IBOutlet weak var name: UITextField!
     @IBOutlet weak var address: UITextField!
     @IBOutlet weak var phone: UITextField!
@@ -23,9 +24,9 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
     }
 
+    func getFoo() -> Int { return 4 }
     @IBAction func saveContact(sender: UIButton) {
-        let contactEntity = NSEntityDescription.entityForName("Contacts", inManagedObjectContext: managedObjectContext)
-        let contact = Contacts(entity: contactEntity!, insertIntoManagedObjectContext: managedObjectContext)
+        let contact = Contacts(entity: contactEntity, insertIntoManagedObjectContext: managedObjectContext)
         
         contact.name = name.text
         contact.address = address.text
@@ -43,8 +44,6 @@ class ViewController: UIViewController {
     }
     
     @IBAction func findContact(sender: UIButton) {
-        let contactEntity = NSEntityDescription.entityForName("Contacts", inManagedObjectContext: managedObjectContext)
-        
         let request = NSFetchRequest()
         request.entity = contactEntity
         
