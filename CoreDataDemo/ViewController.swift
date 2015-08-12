@@ -11,8 +11,17 @@ import CoreData
 
 class ViewController: UIViewController {
     
-    let managedObjectContext = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
-    lazy var contactEntity:NSEntityDescription! = NSEntityDescription.entityForName("Contacts", inManagedObjectContext: self.managedObjectContext)
+    struct Constants {
+        static let CoreDataEntityName = "Contacts"
+        static let NameKey = "name"
+        static let PhoneKey = "phone"
+        static let AddressKey = "address"
+        
+        static let NameQuery = "(" + Constants.NameKey + " = %@)"
+    }
+    
+    let context = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+    lazy var contacts:NSEntityDescription! = NSEntityDescription.entityForName(Constants.CoreDataEntityName, inManagedObjectContext: self.context)
     
     @IBOutlet weak var name: UITextField!
     @IBOutlet weak var address: UITextField!
@@ -24,16 +33,15 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
     }
 
-    func getFoo() -> Int { return 4 }
     @IBAction func saveContact(sender: UIButton) {
-        let contact = Contacts(entity: contactEntity, insertIntoManagedObjectContext: managedObjectContext)
+        let contact = Contacts(entity: contacts, insertIntoManagedObjectContext: context)
         
         contact.name = name.text
         contact.address = address.text
         contact.phone = phone.text
         
         do {
-            try managedObjectContext.save()
+            try context.save()
             name.text = ""
             address.text = ""
             phone.text = ""
@@ -45,19 +53,19 @@ class ViewController: UIViewController {
     
     @IBAction func findContact(sender: UIButton) {
         let request = NSFetchRequest()
-        request.entity = contactEntity
+        request.entity = contacts
         
-        let pred = NSPredicate(format: "(name = %@)", name.text!)
+        let pred = NSPredicate(format: Constants.NameQuery, name.text!)
         request.predicate = pred
         
         do {
-            let results = try managedObjectContext.executeFetchRequest(request)
+            let results = try context.executeFetchRequest(request) as! [NSManagedObject]
             if results.count > 0 {
-                let match = results[0] as! NSManagedObject
+                let match = results[0]
                 
-                name.text = match.valueForKey("name") as? String
-                address.text = match.valueForKey("address") as? String
-                phone.text = match.valueForKey("phone") as? String
+                name.text = match.valueForKey(Constants.NameKey) as? String
+                address.text = match.valueForKey(Constants.AddressKey) as? String
+                phone.text = match.valueForKey(Constants.PhoneKey) as? String
             }
             status.text = "\(results.count) matches found"
         } catch {
