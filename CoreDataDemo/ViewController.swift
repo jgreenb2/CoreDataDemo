@@ -52,24 +52,29 @@ class ViewController: UIViewController {
     }
     
     @IBAction func findContact(sender: UIButton) {
-        let request = NSFetchRequest()
-        request.entity = contacts
-        
-        let pred = NSPredicate(format: Constants.NameQuery, name.text!)
-        request.predicate = pred
-        
-        do {
-            let results = try context.executeFetchRequest(request) as! [NSManagedObject]
-            if results.count > 0 {
-                let match = results[0]
-                
-                name.text = match.valueForKey(Constants.NameKey) as? String
-                address.text = match.valueForKey(Constants.AddressKey) as? String
-                phone.text = match.valueForKey(Constants.PhoneKey) as? String
+//        let request = NSFetchRequest()
+//        request.entity = contacts
+//        
+//        let pred = NSPredicate(format: Constants.NameQuery, name.text!)
+//        request.predicate = pred
+        let model = context.persistentStoreCoordinator?.managedObjectModel
+        var substitutions=[String:String]()
+        substitutions["FULL_NAME"]=name.text!
+        let request = model?.fetchRequestFromTemplateWithName("FetchByName", substitutionVariables: substitutions)
+            if let request = request {
+            do {
+                 let results = try context.executeFetchRequest(request) as! [NSManagedObject]
+                 if results.count > 0 {
+                    let match = results[0]
+                    
+                    name.text = match.valueForKey(Constants.NameKey) as? String
+                    address.text = match.valueForKey(Constants.AddressKey) as? String
+                    phone.text = match.valueForKey(Constants.PhoneKey) as? String
+                }
+                status.text = "\(results.count) matches found"
+            } catch {
+                status.text = (error as NSError).localizedDescription
             }
-            status.text = "\(results.count) matches found"
-        } catch {
-            status.text = (error as NSError).localizedDescription
         }
     }
     
