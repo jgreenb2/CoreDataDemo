@@ -17,10 +17,13 @@ class ViewController: UIViewController {
         static let PhoneKey = "phone"
         static let AddressKey = "address"
         
-        static let NameQuery = "(" + Constants.NameKey + " = %@)"
+        //static let NameQuery = "(" + Constants.NameKey + " = %@)"
+        static let StoredNameQuery = "FetchByName"
+        static let StoredNameQueryVariable = "FULL_NAME"
     }
     
     let context = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
+    lazy var model:NSManagedObjectModel! = self.context.persistentStoreCoordinator?.managedObjectModel
     lazy var contacts:NSEntityDescription! = NSEntityDescription.entityForName(Constants.CoreDataEntityName, inManagedObjectContext: self.context)
     
     @IBOutlet weak var name: UITextField!
@@ -42,11 +45,8 @@ class ViewController: UIViewController {
         
         do {
             try context.save()
-            name.text = ""
-            address.text = ""
-            phone.text = ""
-            status.text = ""
-        } catch {
+            resetQueryForm()
+         } catch {
             status.text = (error as NSError).localizedDescription
         }
     }
@@ -57,25 +57,32 @@ class ViewController: UIViewController {
 //        
 //        let pred = NSPredicate(format: Constants.NameQuery, name.text!)
 //        request.predicate = pred
-        let model = context.persistentStoreCoordinator?.managedObjectModel
-        var substitutions=[String:String]()
-        substitutions["FULL_NAME"]=name.text!
-        let request = model?.fetchRequestFromTemplateWithName("FetchByName", substitutionVariables: substitutions)
-            if let request = request {
-            do {
-                 let results = try context.executeFetchRequest(request) as! [NSManagedObject]
-                 if results.count > 0 {
-                    let match = results[0]
-                    
-                    name.text = match.valueForKey(Constants.NameKey) as? String
-                    address.text = match.valueForKey(Constants.AddressKey) as? String
-                    phone.text = match.valueForKey(Constants.PhoneKey) as? String
+
+        if let request = model?.fetchRequestFromTemplateWithName(Constants.StoredNameQuery, 
+                         substitutionVariables: [Constants.StoredNameQueryVariable:name.text!]) {
+                do {
+                    if let results = try context.executeFetchRequest(request) as? [NSManagedObject] where results.count > 0 {
+                        let match = results[0]
+                        
+                        name.text = match.valueForKey(Constants.NameKey) as? String
+                        address.text = match.valueForKey(Constants.AddressKey) as? String
+                        phone.text = match.valueForKey(Constants.PhoneKey) as? String
+                        status.text = "\(results.count) matches found"
+                    } else {
+                        resetQueryForm()
+                        status.text = "No matches found"
+                    }
+                } catch {
+                    status.text = (error as NSError).localizedDescription
                 }
-                status.text = "\(results.count) matches found"
-            } catch {
-                status.text = (error as NSError).localizedDescription
-            }
         }
+    }
+    
+    func resetQueryForm() {
+        name.text = ""
+        address.text = ""
+        phone.text = ""
+        status.text = ""
     }
     
     override func didReceiveMemoryWarning() {

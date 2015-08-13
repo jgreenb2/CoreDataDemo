@@ -5,7 +5,7 @@
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="phone" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
-    <fetchRequest name="FetchByName" entity="Contacts" predicateString="name == &quot;FULL_NAME&quot;"/>
+    <fetchRequest name="FetchByName" entity="Contacts" predicateString="name == $FULL_NAME"/>
     <elements>
         <element name="Contacts" positionX="-63" positionY="-18" width="128" height="90"/>
     </elements>
