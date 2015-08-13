@@ -25,6 +25,8 @@ class ViewController: UIViewController {
     let context = (UIApplication.sharedApplication().delegate as! AppDelegate).managedObjectContext
     lazy var model:NSManagedObjectModel! = self.context.persistentStoreCoordinator?.managedObjectModel
     lazy var contacts:NSEntityDescription! = NSEntityDescription.entityForName(Constants.CoreDataEntityName, inManagedObjectContext: self.context)
+    var queryResults = [NSManagedObject]()
+    var currentRecord = 0
     
     @IBOutlet weak var name: UITextField!
     @IBOutlet weak var address: UITextField!
@@ -62,15 +64,12 @@ class ViewController: UIViewController {
                          substitutionVariables: [Constants.StoredNameQueryVariable:name.text!]) {
                 do {
                     if let results = try context.executeFetchRequest(request) as? [NSManagedObject] where results.count > 0 {
-                        let match = results[0]
-                        
-                        name.text = match.valueForKey(Constants.NameKey) as? String
-                        address.text = match.valueForKey(Constants.AddressKey) as? String
-                        phone.text = match.valueForKey(Constants.PhoneKey) as? String
-                        status.text = "\(results.count) matches found"
+                        queryResults = results
+                        currentRecord = 0
+                        updateResults(queryResults)
                     } else {
                         resetQueryForm()
-                        status.text = "No matches found"
+                        status.text = "No records found"
                     }
                 } catch {
                     status.text = (error as NSError).localizedDescription
@@ -78,18 +77,34 @@ class ViewController: UIViewController {
         }
     }
     
+    @IBAction func nextRecord(sender: UIButton) {
+        var inc: Int {
+            return sender.currentTitle == "<<" ?  -1 :  1
+        }
+        if case 0..<queryResults.count = (currentRecord+inc) {
+            currentRecord += inc
+            updateResults(queryResults)
+        }
+    }
+    
+    func updateResults(objs: [NSManagedObject]) {
+        name.text = objs[currentRecord].valueForKey(Constants.NameKey) as? String
+        address.text = objs[currentRecord].valueForKey(Constants.AddressKey) as? String
+        phone.text = objs[currentRecord].valueForKey(Constants.PhoneKey) as? String
+        status.text = "Showing record \(currentRecord+1) of \(objs.count)"
+    }
+    
     func resetQueryForm() {
+        queryResults.removeAll()
         name.text = ""
         address.text = ""
         phone.text = ""
-        status.text = ""
+        status.text = " "
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-
 }
 
