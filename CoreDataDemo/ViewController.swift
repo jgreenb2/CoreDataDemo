@@ -66,7 +66,7 @@ class ViewController: UIViewController {
                     if let results = try context.executeFetchRequest(request) as? [NSManagedObject] where results.count > 0 {
                         queryResults = results
                         currentRecord = 0
-                        updateResults(queryResults)
+                        updateResults()
                     } else {
                         resetQueryForm()
                         status.text = "No records found"
@@ -83,15 +83,15 @@ class ViewController: UIViewController {
         }
         if case 0..<queryResults.count = (currentRecord+inc) {
             currentRecord += inc
-            updateResults(queryResults)
+            updateResults()
         }
     }
     
-    func updateResults(objs: [NSManagedObject]) {
-        name.text = objs[currentRecord].valueForKey(Constants.NameKey) as? String
-        address.text = objs[currentRecord].valueForKey(Constants.AddressKey) as? String
-        phone.text = objs[currentRecord].valueForKey(Constants.PhoneKey) as? String
-        status.text = "Showing record \(currentRecord+1) of \(objs.count)"
+    func updateResults() {
+        name.text = queryResults[currentRecord].valueForKey(Constants.NameKey) as? String
+        address.text = queryResults[currentRecord].valueForKey(Constants.AddressKey) as? String
+        phone.text = queryResults[currentRecord].valueForKey(Constants.PhoneKey) as? String
+        status.text = "Showing record \(currentRecord+1) of \(queryResults.count)"
     }
     
     func resetQueryForm() {
